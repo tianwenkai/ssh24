@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- 扫描所有声明过注解的类  进行管理-->
+	 <context:component-scan base-package="com.woniu"></context:component-scan>
+	<!-- 自动装配  已使用注解进行自动装配,故注释-->
+	<!-- <aop:aspectj-autoproxy></aop:aspectj-autoproxy> -->
+    
+    <!-- 使用druid获得数据库链接池的对象  -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+    	<!-- 使用spring的依赖注入，将数据库链接的属性注入进去 -->
+    	<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+    	<property name="url" value="jdbc:mysql://localhost:3306/ssh?characterEncoding=utf8"></property>
+    	<property name="username" value="root"></property>
+    	<property name="password" value="12345678"></property>
+    </bean>
+    
+    <!-- 配置sessionFactory  其中class应与添加的hibernate-core包的版本一致 -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<!-- 使用spring的依赖注入，将sessionFactory的属性注入进去 -->
+		<!-- 注入数据库链接池 -->
+		<property name="dataSource" ref="dataSource"></property>
+		 <property name="hibernateProperties">
+		 	<props>
+		 		<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+		 		<prop key="hibernate.show_sql">true</prop>
+		 		<!-- 如果使用spring的声明式事务，则该配置不能写 -->
+		 		<!--  <prop key="hibernate.current_session_context_class">thread</prop> -->
+		 	</props>
+		 </property>
+		 <!--映射文件关联-->
+		 <property name="mappingLocations" value="classpath:com/woniu/pojo/*.hbm.xml"></property>
+	</bean>
+	
+	<!-- 事务管理器声明 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 自动使用使用事务 
+	 	transaction-manager="transactionManager"必须与上面的事务管理器名称一致，如果名字就是transactionManager，则可以省略该属性
+	-->
+	<tx:annotation-driven/>
+</beans>

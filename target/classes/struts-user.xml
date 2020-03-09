@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+	"http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="user" namespace="/" extends="struts-default">
+		<!-- 因为action对象在spring容器已经存在，则class可以直接写出对象名 -->
+		<action name="save" class="userAction" method="save">
+			<result name="success" type="redirectAction">list.action</result>
+		</action>
+		<!-- 登录-->
+		<action name="login" class="userAction" method="login">
+			<result name="success" type="redirectAction">list.action</result>
+			<result name="login" type="redirect">/login.jsp</result>
+		</action>
+		<!-- 列表-->
+		<action name="list" class="userAction" method="list">
+			<result name="success">/userList.jsp</result>
+		</action>
+		<!-- 添加用户的页面-->
+		<action name="addUserFrom" class="userAction" method="addUserFrom">
+			<result name="success">/addUser.jsp</result>
+		</action>
+		<!-- 添加用户 -->
+		<action name="addUser" class="userAction" method="addUser">
+			<result name="success" type="redirectAction">list.action</result>
+		</action>
+		<!-- 重置密码 -->
+		<action name="resetPwd" class="userAction" method="resetPwd">
+			<result name="success" type="redirectAction">list.action</result>
+		</action>
+		<!-- 修改权限页面-->
+		<action name="reviseRoleFrom" class="userAction" method="reviseRoleFrom">
+			<result name="success" >/reviseRole.jsp</result>
+		</action>
+		<!-- 修改权限-->
+		<action name="reviseRole" class="userAction" method="reviseRole">
+			<result name="success" type="redirectAction">list.action</result>
+		</action>
+		<!-- 修改密码-->
+		<action name="revisePwd" class="userAction" method="revisePwd">
+			<result name="success" type="redirect">/login.jsp</result>
+		</action>
+		
+	</package>
+</struts>
